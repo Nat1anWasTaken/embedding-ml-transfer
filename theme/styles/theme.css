@@ -875,3 +875,25 @@ body,
 .google-qr-row .deck-qr-caption {
   font-size: 14px;
 }
+
+/* View transitions: a soft crossfade for the page, morphs for named elements */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 420ms;
+  animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+::view-transition-group(*) {
+  animation-duration: 560ms;
+  animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Emphasis inside titles: blue, upright, and inline so short titles stay on one line */
+.slidev-layout h1 em {
+  color: var(--google-blue);
+  font-style: normal;
+}
+
+.slidev-layout.statement h1 em {
+  display: inline;
+}
