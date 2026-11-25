@@ -11,7 +11,8 @@ PLAN:
 3 觀察二：tied — 聽到 input/output 是同一個 E；看：同一張示意圖（intro-model morph），click 後兩端 E 連成同一個矩陣、公式出現；之後：E 是主體唯一的讀寫介面。
 4 語言 = 一組列 — 聽到「對主體來說，語言只是 E 的某幾列」；看：E 的放大版，按語言分色帶；之後：把語言想成可插拔的列。
 5 思想實驗 — 聽到：如果訓練時這組列缺席、推論時放回？看：同一個矩陣（intro-rows morph），zh 列變虛線、click 後放回；之後：好奇「會不會動」。
-6a 有人試過 — 接續思想實驗：大標「凍結對齊好的向量，只訓練主體」，一行小字交代這是 Artetxe 2020 的對照組 CLWE、論文主方法是反方向的 MonoTrans；看：左邊論文頁面展開，右邊 CLWE 三步卡片逐一出現；之後：「我們的思想實驗在那篇只是個 baseline」。
+6a 有人試過 — 接續思想實驗：大標「做法跟我們一樣」；看：左邊論文頁面展開，右邊「我們的思想實驗 = Artetxe 2020 的對照組」三步逐一對上；之後：「我們的思想實驗在那篇只是個 baseline」。
+6a' 什麼是 CLWE — 聽到各語言用各自的 subword 詞表訓練 skip-gram，再用 VecMap（種子詞典 + 自我學習的正交映射）對到英文；看：論文縮到右上角，兩團詞向量，右邊三張卡片逐一出現，最後中文那團轉過去疊到英文上；之後：記住「靜態、各自訓練、事後線性對齊」。
 6b 在哪裡失敗 — 聽到三個任務由易到難的結果；看：論文縮到右上角，CLWE vs MonoTrans 長條逐任務長出，最後只看英文；之後：「主體沒壞，壞在換詞向量，且越難越糟」。
 6c 他們對 CLWE 的評語 — 聽到 overly restrictive 是對 baseline 的評語、不是論文結論，以及它是在什麼條件下說的；看：論文放大回左邊、右邊引文；之後：帶著懷疑進入「條件已經不同」。
 7 為什麼值得再試 — 聽到他們用 2018 年的靜態詞向量 + encoder；看：兩欄比較表，逐列出現；之後：「條件已經不同了」。
@@ -111,24 +112,69 @@ clicks: 3
 
 <div>
   <div class="google-kicker">2020 年，有人當對照組試過</div>
-  <h1 class="!mb-2">凍結對齊好的向量，<em>只訓練主體</em></h1>
-  <div class="mb-5 text-[15px] leading-snug text-[var(--google-muted)]">Artetxe 2020 的對照組 CLWE（論文主方法是反方向的 MonoTrans）</div>
-  <div class="flex flex-col gap-3">
-    <div v-click="1" class="google-card compact"><b>1 · 對齊</b><br><span class="text-[15px] text-[var(--google-muted)]">各語言 subword skip-gram 向量，用 VecMap 對到英文</span></div>
-    <div v-click="2" class="google-card compact"><b>2 · 凍結、只用英文訓練</b><br><span class="text-[15px] text-[var(--google-muted)]">在凍結的 embedding 上預訓練 BERT（MLM + NSP）、英文 fine-tune</span></div>
-    <div v-click="3" class="google-card compact"><b>3 · 換上外語向量</b><br><span class="text-[15px] text-[var(--google-muted)]">推論時把 embedding 換成外語的，zero-shot</span></div>
+  <h1 class="!mb-6">做法跟我們<em>一樣</em></h1>
+  <div class="grid grid-cols-[1fr_auto_1fr] items-center gap-x-3 gap-y-3">
+    <div class="text-[15px] font-semibold text-[#7e57c2]">我們的思想實驗</div>
+    <div />
+    <div class="text-[15px] font-semibold text-[var(--google-muted)]">Artetxe 2020 的對照組</div>
+    <div class="google-card compact !py-3 text-[18px]">對齊好的 E</div>
+    <div v-click="1" class="text-[22px] text-[var(--google-muted)]">=</div>
+    <div v-click="1" class="google-card compact !py-3 text-[18px]">對齊好的詞向量</div>
+    <div class="google-card compact !py-3 text-[18px]">凍結，只訓練主體</div>
+    <div v-click="2" class="text-[22px] text-[var(--google-muted)]">=</div>
+    <div v-click="2" class="google-card compact !py-3 text-[18px]">凍結，只用英文訓練</div>
+    <div class="google-card compact !py-3 text-[18px]">推論時放回 L<sub>ban</sub></div>
+    <div v-click="3" class="text-[22px] text-[var(--google-muted)]">=</div>
+    <div v-click="3" class="google-card compact !py-3 text-[18px]">推論時換上外語向量</div>
   </div>
 </div>
 
 </div>
 
 <!--
-這個思想實驗其實有人做過，只是不是當主角。Artetxe、Ruder、Yogatama 在 ACL 2020 的 "On the Cross-lingual Transferability of Monolingual Representations" 裡，有一組對照叫 CLWE，做法幾乎就是剛剛的思想實驗。
-先講清楚這篇論文的定位：它的主方法是 MonoTrans，方向剛好相反，是凍結主體、只學新語言的 embedding，這個我們 Related Works 和最後的 Other Paths 會再講。CLWE 只是他們拿來比較的幾個對照組之一，而且不是他們提出的方法，是這個領域的標準做法，用他們自己 2018 年的 VecMap 實作。
-[click] 第一步，每個語言在同一套 subword 詞表上各自訓練 skip-gram 向量，再用 VecMap 正交映射到英文的空間。
-[click] 第二步，把這組向量凍結，只用英文在上面預訓練 BERT，再用英文標註資料 fine-tune，embedding 一直凍著。
-[click] 第三步，推論時把外語那一份映射好的向量換上去，直接 zero-shot。
-這個對照組，幾乎就是我們剛剛的思想實驗；也就是說，我們今天想做的事，在這篇論文裡只是一個被比下去的 baseline。
+這個思想實驗其實有人做過，只是不是當主角。Artetxe、Ruder、Yogatama 在 ACL 2020 的 "On the Cross-lingual Transferability of Monolingual Representations" 裡，有一組對照組，做法幾乎就是剛剛的思想實驗。
+先講清楚這篇論文的定位：它的主方法是 MonoTrans，方向剛好相反，是凍結主體、只學新語言的 embedding，這個我們 Related Works 和最後的 Other Paths 會再講。我們要看的是他們拿來比較的其中一個對照組。
+左邊是我們剛剛的思想實驗，右邊一格一格對上去。
+[click] 第一步，我們用一組已經對齊好的 E；他們也是先拿一組跨語言對齊好的詞向量。
+[click] 第二步，我們凍結 E、只訓練主體；他們把這組向量凍結，只用英文在上面預訓練 BERT，再用英文標註資料 fine-tune，embedding 一直凍著。
+[click] 第三步，我們推論時把 L_ban 的列放回去；他們推論時把 embedding 換成外語那一份，直接 zero-shot。
+三步都對得上。也就是說，我們今天想做的事，在這篇論文裡只是一個被比下去的 baseline。那他們那組「對齊好的詞向量」是怎麼來的？下一張。
+-->
+
+---
+layout: default
+clicks: 2
+---
+
+<PaperStack class="!absolute top-6 right-12" :pages="['/papers/artetxe2020/p1.jpg','/papers/artetxe2020/p2.jpg','/papers/artetxe2020/p3.jpg']" width="4.5rem" vt="intro-artetxe" />
+
+<div class="google-kicker">CLWE · Cross-lingual word embedding mappings</div>
+
+# 各自訓練，*事後對齊*
+
+<div class="grid grid-cols-[30rem_1fr] items-center gap-10 mt-2">
+
+<IntroClweMap :mapped="$clicks >= 2" />
+
+<div class="flex flex-col gap-3 text-[17px] mt-12">
+  <div class="google-card compact !py-3"><b>skip-gram</b><br><span class="text-[15px] text-[var(--google-muted)]">每個語言各自的 subword 詞表、各自訓練</span></div>
+  <div v-click="1" class="google-card compact !py-3"><b>VecMap · 起點</b><br><span class="text-[15px] text-[var(--google-muted)]">拼法相同的 subword 當種子詞典 D</span></div>
+  <div v-click="2" class="google-card compact !py-3"><b>VecMap · 自我學習</b><br><span class="text-[15px] text-[var(--google-muted)]">用 D 解正交 W ⇄ 用最近鄰重找 D</span></div>
+</div>
+
+</div>
+
+<div class="absolute bottom-8 left-14 text-[15px] text-[var(--google-muted)]">VecMap：Artetxe, Labaka, Agirre (ACL 2018) · 正交模式，所有語言對到英文</div>
+
+<!--
+這組向量在論文裡叫 CLWE，全名是 cross-lingual word embedding mappings：先各自學好單語的詞向量，再事後把它們映射到同一個空間。這是 2020 年以前做跨語言遷移的標準路線。
+第一步，每個語言各自訓練 skip-gram。注意他們這裡每個語言用的是自己的 subword 詞表，和 MonoTrans 一樣，每個語言 32k，不是 mBERT 那種共用詞表。所以兩個空間形狀可能很像，狗和貓靠得近、花和樹靠得近，但彼此的座標系是任意的，就像畫面上中文那團被轉了一個角度。
+接下來的對齊用的是 VecMap，Artetxe 自己 2018 年的工具。它先把向量做長度正規化、每一維置中、再正規化一次，然後分兩件事：
+[click] 起點：需要一個初始的詞典 D，告訴它哪些詞對哪些詞。這篇表現最好的 ident 版本，用的是兩個語言裡拼法完全相同的 subword 當種子，像數字、人名、標點；另一個 unsup 版本則完全不用詞典，靠每個詞在自己語言裡的相似度分布去猜配對。
+[click] 自我學習：給定 D，用 SVD 解出最好的正交矩陣 W，也就是 orthogonal Procrustes，W 等於 U V 轉置，其中 U Σ V 轉置是 X 轉置 D Z；再用映射後的最近鄰重新找一份 D；兩步交替直到收斂。VecMap 為了跳出壞的局部解，詞典那一步還會隨機丟掉一部分相似度，類似退火。
+他們用的是正交模式，而且是把每個語言都對到英文，英文那邊不動。
+這個方法不是這篇提出的，是他們拿來當對照組的標準 baseline。要記住它兩個特徵：向量是靜態、各自訓練的；對齊是事後用一個正交的線性映射找出來的。這兩點等一下會變成我們跟他們最大的差別。
+接下來看這個對照組的表現。
 -->
 
 ---
